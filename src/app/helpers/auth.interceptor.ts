@@ -1,7 +1,6 @@
-import {HTTP_INTERCEPTORS, HttpErrorResponse, HttpEvent} from '@angular/common/http';
+import {HttpErrorResponse, HttpEvent} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {HttpInterceptor, HttpHandler, HttpRequest} from '@angular/common/http';
-
 import {TokenStorageService} from '../services/token-storage.service';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {AuthService} from "../services/auth.service";
@@ -14,7 +13,10 @@ export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject = new BehaviorSubject<any>(null);
 
-  constructor(private tokenService: TokenStorageService, private authService: AuthService) {
+  constructor(
+    private tokenService: TokenStorageService,
+    private authService: AuthService
+  ) {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<Object>> {
@@ -27,7 +29,6 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(
       catchError(error => {
         if (error instanceof HttpErrorResponse && !authReq.url.includes('auth/signin') && error.status === 401) {
-
           return this.handle401Error(authReq, next);
         }
         return throwError(error);
@@ -47,10 +48,8 @@ export class AuthInterceptor implements HttpInterceptor {
           tap(console.log),
           switchMap((token: any) => {
             this.isRefreshing = false;
-
             this.tokenService.saveToken(token.accessToken);
             this.refreshTokenSubject.next(token.accessToken);
-
             return next.handle(this.addTokenHeader(request, token.accessToken));
           }),
           catchError((err) => {
