@@ -4,7 +4,6 @@ import {UserService} from "../../services/user.service";
 @Component({
   selector: 'app-board-moderator',
   templateUrl: './board-moderator.component.html',
-  styleUrls: ['./board-moderator.component.scss']
 })
 export class BoardModeratorComponent implements OnInit {
   content?: string;

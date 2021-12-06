@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpBackend, HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {environment} from "../../environments/environment";
 
-const AUTH_API = 'http://localhost:8080/api/auth/';
+const AUTH_API = environment.AUTH_API;
 
 export interface User {
   accessToken: string;
@@ -12,7 +13,6 @@ export interface User {
   roles: string[];
   username: string;
 }
-
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +31,6 @@ export class AuthService {
   }
 
   refreshToken(token: string) {
-    return this.http.post(AUTH_API + 'refreshtoken', {refreshToken: token})}
-
+    return this.http.post(AUTH_API + 'refreshtoken', {refreshToken: token})
+  }
 }
